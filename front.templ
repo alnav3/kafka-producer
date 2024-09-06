@@ -1,0 +1,40 @@
+package main
+
+templ indexPage() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<title>Kafka Producer</title>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+			<script src="https://cdn.tailwindcss.com"></script>
+		</head>
+		<body class="bg-gray-100 p-8">
+			<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+				<div class="p-8">
+					<h1 class="text-2xl font-bold mb-4">Kafka Producer</h1>
+					<form hx-post="/produce/{topic}" hx-target="#result" hx-swap="innerHTML">
+						<div class="mb-4">
+							<label for="topic" class="block text-gray-700 text-sm font-bold mb-2">Topic:</label>
+							<input type="text" id="topic" name="topic" required
+								class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+						</div>
+						<div class="mb-4">
+							<label for="message" class="block text-gray-700 text-sm font-bold mb-2">JSON Message:</label>
+							<textarea id="message" name="message" rows="4" required
+								class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+						</div>
+						<div class="flex items-center justify-between">
+							<button type="submit"
+								class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+								Send Message
+							</button>
+						</div>
+					</form>
+					<div id="result" class="mt-4 text-sm text-gray-600"></div>
+				</div>
+			</div>
+		</body>
+	</html>
+}
