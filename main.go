@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/a-h/templ"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+    "github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 var producer *kafka.Producer
