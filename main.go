@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 
 	"github.com/a-h/templ"
-    "github.com/confluentinc/confluent-kafka-go/v2/kafka"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 var producer *kafka.Producer
@@ -24,7 +23,7 @@ func main() {
 	defer producer.Close()
 
 	http.Handle("/", templ.Handler(indexPage()))
-	http.HandleFunc("/produce/{topic}", handleProduce)
+	http.HandleFunc("/produce", handleProduce)
 
 	fmt.Println("Starting server on port 42069")
 	if err := http.ListenAndServe(":42069", nil); err != nil {
@@ -33,21 +32,14 @@ func main() {
 }
 
 func handleProduce(w http.ResponseWriter, r *http.Request) {
-	topic := r.PathValue("topic")
-	if topic == "" {
-		http.Error(w, "Missing Kafka topic in URL", http.StatusBadRequest)
+	topic := r.FormValue("topic")
+    message := r.FormValue("message")
+	if topic == "" || message == "" {
+		http.Error(w, "Missing data in request", http.StatusBadRequest)
 		return
 	}
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
-		return
-	}
-	defer r.Body.Close()
-
-    fmt.Println("Received message:", string(body))
-	produceMessage(topic, body, w)
+	produceMessage(topic, message, w)
 }
 func removeNewlinesAndExtraSpaces(input []byte) []byte {
 	// Remove newlines and carriage returns
@@ -60,10 +52,10 @@ func removeNewlinesAndExtraSpaces(input []byte) []byte {
 	return input
 }
 
-func produceMessage(topic string, body []byte, w http.ResponseWriter) {
+func produceMessage(topic string, body string, w http.ResponseWriter) {
 	// Parse JSON body into a map
 	var data map[string]interface{}
-	if err := json.Unmarshal(body, &data); err != nil {
+	if err := json.Unmarshal([]byte(body), &data); err != nil {
 		http.Error(w, "Invalid JSON in request body", http.StatusBadRequest)
 		return
 	}

@@ -14,7 +14,7 @@ templ indexPage() {
 			<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
 				<div class="p-8">
 					<h1 class="text-2xl font-bold mb-4">Kafka Producer</h1>
-					<form hx-post="/produce/{topic}" hx-target="#result" hx-swap="innerHTML">
+					<form hx-post="/produce" hx-target="#result" hx-swap="innerHTML">
 						<div class="mb-4">
 							<label for="topic" class="block text-gray-700 text-sm font-bold mb-2">Topic:</label>
 							<input type="text" id="topic" name="topic" required
